@@ -1,6 +1,8 @@
 package ua.goit.java8.javadeveloper.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -20,6 +22,7 @@ public class Role {
     @Column(name = "name")
     private String name;
 
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id", scope=User.class)
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
@@ -50,12 +53,12 @@ public class Role {
         this.users = users;
     }
 
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-    //            ", users=" + users +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Role{" +
+//                "id=" + id +
+//                ", name='" + name + '\'' +
+//    //            ", users=" + users +
+//                '}';
+//    }
 }

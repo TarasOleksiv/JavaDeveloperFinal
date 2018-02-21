@@ -1,5 +1,7 @@
 package ua.goit.java8.javadeveloper.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Proxy;
 
@@ -9,7 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Proxy(lazy = false)
+//@Proxy(lazy = false)
 public class User {
 
     @Id
@@ -35,7 +37,9 @@ public class User {
     @Transient
     private String confirmPassword;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    //@ManyToMany(fetch = FetchType.EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id", scope=Role.class)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
