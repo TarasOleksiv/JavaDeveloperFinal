@@ -7,4 +7,5 @@ import ua.goit.java8.javadeveloper.model.User;
  * Created by Taras on 20.02.2018.
  */
 public interface UserRepository extends JpaRepository<User, Long> {
+    User findByUsername(String username);
 }
