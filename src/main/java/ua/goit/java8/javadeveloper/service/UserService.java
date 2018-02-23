@@ -11,7 +11,7 @@ public interface UserService {
 
     User getById(Long id);
 
-    void save(User user);
+    void create(User user);
 
     void update(User user);
 
@@ -20,4 +20,6 @@ public interface UserService {
     List<User> getAll();
 
     User findByUsername(String username);
+
+    boolean isUserExist(User user);
 }
