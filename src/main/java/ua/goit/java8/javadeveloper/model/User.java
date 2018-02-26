@@ -154,11 +154,4 @@ public class User implements Serializable {
         this.position = position;
     }
 
-    /*@Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + username + '\'' +
-                '}';
-    }*/
 }

@@ -68,11 +68,14 @@ public class DepartmentController {
             return new ResponseEntity<>(messages,HttpStatus.BAD_REQUEST);
         }
 
-        System.out.println("Creating Department " + department.getName());
+        String name = department.getName();
+        System.out.println("Creating Department " + name);
 
         if (departmentService.isDepartmentExist(department)) {
-            System.out.println("A Department with name " + department.getName() + " already exists");
-            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+            String errorMessage = "A Department with name " + name + " already exists";
+            System.out.println(errorMessage);
+            messages.put("error",errorMessage);
+            return new ResponseEntity<>(messages,HttpStatus.CONFLICT);
         }
 
         departmentService.create(department);
@@ -97,14 +100,19 @@ public class DepartmentController {
         Department currentDepartment = departmentService.getById(id);
 
         if (currentDepartment==null) {
-            System.out.println("Department with id " + id + " not found");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            String errorMessage = "Department with id " + id + " not found";
+            System.out.println(errorMessage);
+            messages.put("error",errorMessage);
+            return new ResponseEntity<>(messages, HttpStatus.NOT_FOUND);
         }
 
         if (departmentService.isDepartmentExist(department)){
-            if (departmentService.findByName(department.getName()).getId() != id) {
-                System.out.println("A Department with name " + department.getName() + " already exists");
-                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            String name = department.getName();
+            if (departmentService.findByName(name).getId() != id) {
+                String errorMessage = "A Department with name " + name + " already exists";
+                System.out.println(errorMessage);
+                messages.put("error",errorMessage);
+                return new ResponseEntity<>(messages, HttpStatus.CONFLICT);
             }
         }
 
@@ -188,7 +196,8 @@ public class DepartmentController {
     //----------------------------- Department validation --------------------------------------------------------
     private Map<String, String> checkDepartment(Department department){
         Map<String, String> messages = new HashMap<String, String>();
-        if (department.getName()==null || department.getName().trim().isEmpty()){
+        String name = department.getName();
+        if (name == null || name.trim().isEmpty()){
             messages.put("name","null or empty");
         }
 

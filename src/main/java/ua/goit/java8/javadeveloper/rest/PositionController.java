@@ -13,7 +13,9 @@ import ua.goit.java8.javadeveloper.service.PositionService;
 import ua.goit.java8.javadeveloper.service.UserService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Taras on 24.02.2018.
@@ -58,18 +60,22 @@ public class PositionController {
     //-------------------Create a Position--------------------------------------------------------
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<Void> createPosition(@RequestBody Position position, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<?> createPosition(@RequestBody Position position, UriComponentsBuilder ucBuilder) {
 
-        if (!checkPosition(position)){
+        Map<String, String> messages = checkPosition(position);
+        if (!messages.isEmpty()){
             System.out.println("Wrong Position input!");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(messages, HttpStatus.BAD_REQUEST);
         }
 
-        System.out.println("Creating Position " + position.getName());
+        String name = position.getName();
+        System.out.println("Creating Position " + name);
 
         if (positionService.isPositionExist(position)) {
-            System.out.println("A Position with name " + position.getName() + " already exists");
-            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+            String errorMessage = "A Position with name " + name + " already exists";
+            System.out.println(errorMessage);
+            messages.put("error", errorMessage);
+            return new ResponseEntity<>(messages, HttpStatus.CONFLICT);
         }
 
         positionService.create(position);
@@ -82,25 +88,31 @@ public class PositionController {
     //------------------- Update a Position --------------------------------------------------------
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Position> updatePosition(@PathVariable("id") long id, @RequestBody Position position) {
+    public ResponseEntity<?> updatePosition(@PathVariable("id") long id, @RequestBody Position position) {
         System.out.println("Updating Position " + id);
+
+        Map<String, String> messages = checkPosition(position);
+        if (!messages.isEmpty()){
+            System.out.println("Wrong Position input!");
+            return new ResponseEntity<>(messages, HttpStatus.BAD_REQUEST);
+        }
 
         Position currentPosition = positionService.getById(id);
 
         if (currentPosition==null) {
-            System.out.println("Position with id " + id + " not found");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        if (!checkPosition(position)){
-            System.out.println("Wrong Position input!");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            String errorMessage = "Position with id " + id + " not found";
+            System.out.println(errorMessage);
+            messages.put("error", errorMessage);
+            return new ResponseEntity<>(messages, HttpStatus.NOT_FOUND);
         }
 
         if (positionService.isPositionExist(position)){
-            if (positionService.findByName(position.getName()).getId() != id) {
-                System.out.println("A Position with name " + position.getName() + " already exists");
-                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            String name = position.getName();
+            if (positionService.findByName(name).getId() != id) {
+                String errorMessage = "A Position with name " + name + " already exists";
+                System.out.println(errorMessage);
+                messages.put("error", errorMessage);
+                return new ResponseEntity<>(messages, HttpStatus.CONFLICT);
             }
         }
 
@@ -179,13 +191,15 @@ public class PositionController {
     }
 
     //--------------------------- Position validation ------------------------------------------------------------
-    private boolean checkPosition(Position position){
 
-        if (position.getName()==null || position.getName().trim().isEmpty()){
-            return false;
+    private Map<String, String> checkPosition(Position position){
+        Map<String, String> messages = new HashMap<String, String>();
+        String name = position.getName();
+        if (name == null || name.trim().isEmpty()){
+            messages.put("name","null or empty");
         }
 
-        return true;
+        return messages;
     }
 
 }

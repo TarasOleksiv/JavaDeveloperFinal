@@ -10,7 +10,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import ua.goit.java8.javadeveloper.model.User;
 import ua.goit.java8.javadeveloper.service.UserService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Taras on 20.02.2018.
@@ -56,12 +58,22 @@ public class UserController {
     //-------------------Create a User--------------------------------------------------------
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<Void> createUser(@RequestBody User user, UriComponentsBuilder ucBuilder) {
-        System.out.println("Creating User " + user.getUsername());
+    public ResponseEntity<?> createUser(@RequestBody User user, UriComponentsBuilder ucBuilder) {
+
+        Map<String, String> messages = checkUser(user);
+        if (!messages.isEmpty()){
+            System.out.println("Wrong User input!");
+            return new ResponseEntity<>(messages,HttpStatus.BAD_REQUEST);
+        }
+
+        String username = user.getUsername();
+        System.out.println("Creating User " + username);
 
         if (userService.isUserExist(user)) {
-            System.out.println("A User with username " + user.getUsername() + " already exists");
-            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+            String errorMessage = "A User with username " + username + " already exists";
+            System.out.println(errorMessage);
+            messages.put("error", errorMessage);
+            return new ResponseEntity<>(messages, HttpStatus.CONFLICT);
         }
 
         userService.create(user);
@@ -75,20 +87,31 @@ public class UserController {
     //------------------- Update a User --------------------------------------------------------
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody User user) {
+    public ResponseEntity<?> updateUser(@PathVariable("id") long id, @RequestBody User user) {
         System.out.println("Updating User " + id);
+
+        Map<String, String> messages = checkUser(user);
+        if (!messages.isEmpty()){
+            System.out.println("Wrong User input!");
+            return new ResponseEntity<>(messages,HttpStatus.BAD_REQUEST);
+        }
 
         User currentUser = userService.getById(id);
 
         if (currentUser==null) {
-            System.out.println("User with id " + id + " not found");
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+            String errorMessage = "User with id " + id + " not found";
+            System.out.println(errorMessage);
+            messages.put("error",errorMessage);
+            return new ResponseEntity<>(messages, HttpStatus.NOT_FOUND);
         }
 
         if (userService.isUserExist(user)){
-            if (userService.findByUsername(user.getUsername()).getId() != id) {
-                System.out.println("A User with username " + user.getUsername() + " already exists");
-                return new ResponseEntity<User>(HttpStatus.CONFLICT);
+            String username = user.getUsername();
+            if (userService.findByUsername(username).getId() != id) {
+                String errorMessage = "A User with username " + username + " already exists";
+                System.out.println(errorMessage);
+                messages.put("error", errorMessage);
+                return new ResponseEntity<>(messages, HttpStatus.CONFLICT);
             }
         }
 
@@ -98,8 +121,6 @@ public class UserController {
         currentUser.setEmail(user.getEmail());
         currentUser.setPassword(user.getPassword());
         currentUser.setHourly_rate(user.getHourly_rate());
-        //currentUser.setDepartment(user.getDepartment());
-        //currentUser.setPosition(user.getPosition());
 
         userService.update(currentUser);
         return new ResponseEntity<User>(currentUser, HttpStatus.OK);
@@ -122,13 +143,27 @@ public class UserController {
     }
 
     //---------------------- User validation --------------------------------------------
-    private boolean checkUser(User user){
+    private Map<String, String> checkUser(User user){
+        Map<String, String> messages = new HashMap<String, String>();
 
-        if (user.getUsername()==null || user.getUsername().trim().isEmpty()){
-            return false;
+        String username = user.getUsername();
+        if (username == null || username.trim().isEmpty()){
+            messages.put("username","null or empty");
         }
 
-        return true;
+        String password = user.getPassword();
+        if (password == null || password.trim().isEmpty()){
+            messages.put("password","null or empty");
+        }
+
+        //String hourly_rate = user.getHourly_rate().toString();
+        if (user.getHourly_rate() == null) {
+            messages.put("hourly_rate", "null or empty");
+        } else if (!user.getHourly_rate().toString().matches("^[0-9]*[.]?[0-9]+$")) {
+            messages.put("hourly_rate", "Please enter digits and/or dot only");
+        }
+
+        return messages;
     }
 
 }
