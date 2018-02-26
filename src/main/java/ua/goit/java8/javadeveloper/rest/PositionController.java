@@ -59,6 +59,12 @@ public class PositionController {
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<Void> createPosition(@RequestBody Position position, UriComponentsBuilder ucBuilder) {
+
+        if (!checkPosition(position)){
+            System.out.println("Wrong Position input!");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         System.out.println("Creating Position " + position.getName());
 
         if (positionService.isPositionExist(position)) {
@@ -84,6 +90,11 @@ public class PositionController {
         if (currentPosition==null) {
             System.out.println("Position with id " + id + " not found");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if (!checkPosition(position)){
+            System.out.println("Wrong Position input!");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         if (positionService.isPositionExist(position)){
@@ -165,6 +176,16 @@ public class PositionController {
         HttpHeaders headers = new HttpHeaders();
         //headers.setLocation(ucBuilder.path("/{department_id}/users").buildAndExpand(department.getId()).toUri());
         return new ResponseEntity<Void>(headers, HttpStatus.OK);
+    }
+
+    //--------------------------- Position validation ------------------------------------------------------------
+    private boolean checkPosition(Position position){
+
+        if (position.getName()==null || position.getName().trim().isEmpty()){
+            return false;
+        }
+
+        return true;
     }
 
 }

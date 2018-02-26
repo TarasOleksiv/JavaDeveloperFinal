@@ -98,7 +98,8 @@ public class UserController {
         currentUser.setEmail(user.getEmail());
         currentUser.setPassword(user.getPassword());
         currentUser.setHourly_rate(user.getHourly_rate());
-        currentUser.setDepartment(user.getDepartment());
+        //currentUser.setDepartment(user.getDepartment());
+        //currentUser.setPosition(user.getPosition());
 
         userService.update(currentUser);
         return new ResponseEntity<User>(currentUser, HttpStatus.OK);
@@ -120,5 +121,14 @@ public class UserController {
         return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
     }
 
+    //---------------------- User validation --------------------------------------------
+    private boolean checkUser(User user){
+
+        if (user.getUsername()==null || user.getUsername().trim().isEmpty()){
+            return false;
+        }
+
+        return true;
+    }
 
 }

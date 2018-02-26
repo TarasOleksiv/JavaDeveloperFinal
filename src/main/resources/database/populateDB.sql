@@ -4,10 +4,10 @@ INSERT INTO roles (name) VALUES
   ('ROLE_MODERATOR'),
   ('ROLE_USER');
 # 02. Populate users;
-INSERT INTO users (username, firstname, lastname, password, email) VALUES
-  ('admin', 'admin', 'admin', '$2a$10$MBNLCmt0VanScq0U.glhwulABB06a5z8RIBFOsL4xhoxegaSdNuH6','admin@example.com'),
-  ('toleksiv', 'taras', 'oleksiv', '$2a$10$d1dnh071WHfnTzSaHL.T3.loKhECNnmEqwgPMYhTgpwuEbvMSngpu','toleksiv@example.com'),
-  ('guest', 'guest', 'guest', '$2a$10$ODDivyvkir2Oh1RHc5ajb.5Ftv7Q2wUUoqhyojSyxvny8rmPYt03a','guest@example.com');
+INSERT INTO users (username, firstname, lastname, password, email, hourly_rate) VALUES
+  ('admin', 'admin', 'admin', '$2a$10$MBNLCmt0VanScq0U.glhwulABB06a5z8RIBFOsL4xhoxegaSdNuH6','admin@example.com', 10),
+  ('toleksiv', 'taras', 'oleksiv', '$2a$10$d1dnh071WHfnTzSaHL.T3.loKhECNnmEqwgPMYhTgpwuEbvMSngpu','toleksiv@example.com', 15),
+  ('guest', 'guest', 'guest', '$2a$10$ODDivyvkir2Oh1RHc5ajb.5Ftv7Q2wUUoqhyojSyxvny8rmPYt03a','guest@example.com', 20);
 # 03. Populate user roles;
 SELECT @roleAdminid:=id FROM roles WHERE name = 'ROLE_ADMIN';
 SELECT @roleModeratorid:=id FROM roles WHERE name = 'ROLE_MODERATOR';
@@ -21,3 +21,48 @@ INSERT INTO user_roles (user_id, role_id) VALUES
 SELECT @userid:=id FROM users WHERE username = 'toleksiv';
 INSERT INTO user_roles (user_id, role_id) VALUES
   (@userid, @roleModeratorid);
+# 04. Populate positions;
+INSERT INTO positions (name) VALUES
+  ('MANAGER'),
+  ('DRIVER'),
+  ('IT SPECIALIST');
+# 05. Populate departments;
+INSERT INTO departments (name) VALUES
+  ('IT'),
+  ('ACCOUNTING'),
+  ('TRANSPORT');
+# 06. Populate event_types;
+INSERT INTO event_types (name) VALUES
+  ('working day'),
+  ('technical study');
+# 07. Populate status_types;
+INSERT INTO status_types (name) VALUES
+  ('work'),
+  ('vacation'),
+  ('sick-leave');
+# 08. Populate user positions;
+SELECT @posManid:=id FROM positions WHERE name = 'MANAGER';
+SELECT @posDriverid:=id FROM positions WHERE name = 'DRIVER';
+SELECT @posITid:=id FROM positions WHERE name = 'IT SPECIALIST';
+SELECT @userid:=id FROM users WHERE username = 'admin';
+INSERT INTO user_positions (user_id, position_id) VALUES
+  (@userid, @posITid);
+SELECT @userid:=id FROM users WHERE username = 'guest';
+INSERT INTO user_positions (user_id, position_id) VALUES
+  (@userid, @posDriverid);
+SELECT @userid:=id FROM users WHERE username = 'toleksiv';
+INSERT INTO user_positions (user_id, position_id) VALUES
+  (@userid, @posManid);
+# 09. Populate user departments;
+SELECT @depITid:=id FROM departments WHERE name = 'IT';
+SELECT @depAccid:=id FROM departments WHERE name = 'ACCOUNTING';
+SELECT @depTransid:=id FROM departments WHERE name = 'TRANSPORT';
+SELECT @userid:=id FROM users WHERE username = 'admin';
+INSERT INTO user_departments (user_id, department_id) VALUES
+  (@userid, @depITid);
+SELECT @userid:=id FROM users WHERE username = 'guest';
+INSERT INTO user_departments (user_id, department_id) VALUES
+  (@userid, @depTransid);
+SELECT @userid:=id FROM users WHERE username = 'toleksiv';
+INSERT INTO user_departments (user_id, department_id) VALUES
+  (@userid, @depAccid);

@@ -13,7 +13,9 @@ import ua.goit.java8.javadeveloper.service.DepartmentService;
 import ua.goit.java8.javadeveloper.service.UserService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Taras on 24.02.2018.
@@ -58,7 +60,14 @@ public class DepartmentController {
     //-------------------Create a Department--------------------------------------------------------
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<Void> createDepartment(@RequestBody Department department, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<?> createDepartment(@RequestBody Department department, UriComponentsBuilder ucBuilder) {
+
+        Map<String, String> messages = checkDepartment(department);
+        if (!messages.isEmpty()){
+            System.out.println("Wrong Department input!");
+            return new ResponseEntity<>(messages,HttpStatus.BAD_REQUEST);
+        }
+
         System.out.println("Creating Department " + department.getName());
 
         if (departmentService.isDepartmentExist(department)) {
@@ -69,15 +78,21 @@ public class DepartmentController {
         departmentService.create(department);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/{id}").buildAndExpand(department.getId()).toUri());
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+        headers.setLocation(ucBuilder.path("api/admin/departments/{id}").buildAndExpand(department.getId()).toUri());
+        return new ResponseEntity<Department>(headers, HttpStatus.CREATED);
     }
 
     //------------------- Update a Department --------------------------------------------------------
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Department> updateDepartment(@PathVariable("id") long id, @RequestBody Department department) {
+    public ResponseEntity<?> updateDepartment(@PathVariable("id") long id, @RequestBody Department department, UriComponentsBuilder ucBuilder) {
         System.out.println("Updating Department " + id);
+
+        Map<String, String> messages = checkDepartment(department);
+        if (!messages.isEmpty()){
+            System.out.println("Wrong Department input!");
+            return new ResponseEntity<>(messages,HttpStatus.BAD_REQUEST);
+        }
 
         Department currentDepartment = departmentService.getById(id);
 
@@ -96,7 +111,10 @@ public class DepartmentController {
         currentDepartment.setName(department.getName());
 
         departmentService.update(currentDepartment);
-        return new ResponseEntity<>(currentDepartment, HttpStatus.OK);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(ucBuilder.path("api/admin/departments/{id}").buildAndExpand(department.getId()).toUri());
+        return new ResponseEntity<>(currentDepartment, headers, HttpStatus.OK);
     }
 
     //------------------- Delete a Department --------------------------------------------------------
@@ -163,7 +181,17 @@ public class DepartmentController {
         }
 
         HttpHeaders headers = new HttpHeaders();
-        //headers.setLocation(ucBuilder.path("/{department_id}/users").buildAndExpand(department.getId()).toUri());
+        headers.setLocation(ucBuilder.path("api/admin/departments/{department_id}/users").buildAndExpand(department.getId()).toUri());
         return new ResponseEntity<Void>(headers, HttpStatus.OK);
+    }
+
+    //----------------------------- Department validation --------------------------------------------------------
+    private Map<String, String> checkDepartment(Department department){
+        Map<String, String> messages = new HashMap<String, String>();
+        if (department.getName()==null || department.getName().trim().isEmpty()){
+            messages.put("name","null or empty");
+        }
+
+        return messages;
     }
 }
