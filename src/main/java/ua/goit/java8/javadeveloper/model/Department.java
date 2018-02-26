@@ -1,21 +1,20 @@
 package ua.goit.java8.javadeveloper.model;
 
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
+/**
+ * Created by Taras on 23.02.2018.
+ */
 
 @Entity
-@Table(name = "roles")
+@Table(name = "departments")
 @Proxy(lazy = false)
-public class Role implements Serializable {
+public class Department implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,12 +24,11 @@ public class Role implements Serializable {
     @Column(name = "name")
     private String name;
 
-    //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id", scope=Role.class)
     @JsonIgnore
-    @ManyToMany(mappedBy = "roles")
+    @OneToMany(mappedBy = "department")
     private Set<User> users;
 
-    public Role() {
+    public Department() {
     }
 
     public Long getId() {
@@ -57,12 +55,13 @@ public class Role implements Serializable {
         this.users = users;
     }
 
-//    @Override
-//    public String toString() {
-//        return "Role{" +
-//                "id=" + id +
-//                ", name='" + name + '\'' +
-//    //            ", users=" + users +
-//                '}';
-//    }
+    public boolean isUserExist(User userToCheck){
+        Set<User> users = this.getUsers();
+        for (User user: users){
+            if (userToCheck.getId() == user.getId()){
+                return true;
+            }
+        }
+        return false;
+    }
 }

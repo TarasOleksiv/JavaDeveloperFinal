@@ -1,5 +1,6 @@
 package ua.goit.java8.javadeveloper.service;
 
+import ua.goit.java8.javadeveloper.model.Role;
 import ua.goit.java8.javadeveloper.model.User;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public interface UserService {
 
     void update(User user);
 
+    void updatePure(User user);
+
     void delete(Long id);
 
     List<User> getAll();
@@ -22,4 +25,9 @@ public interface UserService {
     User findByUsername(String username);
 
     boolean isUserExist(User user);
+
+    boolean addRole(User user, Role role);
+
+    boolean removeRole(User user, Role role);
+
 }

@@ -14,6 +14,7 @@ CREATE TABLE users (
   lastname VARCHAR(45) NULL,
   password VARCHAR(255) NOT NULL,
   email VARCHAR(100) NULL,
+  hourly_rate DECIMAL(7,2) NOT NULL DEFAULT 0,
   PRIMARY KEY (id),
   UNIQUE INDEX USERNAME_IDX (username ASC))
   ENGINE = InnoDB

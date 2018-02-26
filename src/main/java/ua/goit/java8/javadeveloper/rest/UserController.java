@@ -85,11 +85,20 @@ public class UserController {
             return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
         }
 
+        if (userService.isUserExist(user)){
+            if (userService.findByUsername(user.getUsername()).getId() != id) {
+                System.out.println("A User with username " + user.getUsername() + " already exists");
+                return new ResponseEntity<User>(HttpStatus.CONFLICT);
+            }
+        }
+
         currentUser.setUsername(user.getUsername());
         currentUser.setFirstName(user.getFirstName());
         currentUser.setLastName(user.getLastName());
         currentUser.setEmail(user.getEmail());
         currentUser.setPassword(user.getPassword());
+        currentUser.setHourly_rate(user.getHourly_rate());
+        currentUser.setDepartment(user.getDepartment());
 
         userService.update(currentUser);
         return new ResponseEntity<User>(currentUser, HttpStatus.OK);
@@ -111,15 +120,5 @@ public class UserController {
         return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
     }
 
-
-    //------------------- Delete All Users --------------------------------------------------------
-
-    @RequestMapping(value = "", method = RequestMethod.DELETE)
-    public ResponseEntity<User> deleteAllUsers() {
-        System.out.println("Deleting All Users");
-
-        //userService.deleteAllUsers();
-        return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
-    }
 
 }
