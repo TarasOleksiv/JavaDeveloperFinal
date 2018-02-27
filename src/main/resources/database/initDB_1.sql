@@ -3,7 +3,7 @@ CREATE TABLE positions (
   id BIGINT AUTO_INCREMENT NOT NULL,
   name VARCHAR(45) NOT NULL,
   PRIMARY KEY (id),
-  UNIQUE INDEX ROLE_IDX (name ASC))
+  UNIQUE INDEX POSITION_IDX (name ASC))
   ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8;
 # 05. Create table departments;
@@ -11,15 +11,16 @@ CREATE TABLE departments (
   id BIGINT AUTO_INCREMENT NOT NULL,
   name VARCHAR(45) NOT NULL,
   PRIMARY KEY (id),
-  UNIQUE INDEX ROLE_IDX (name ASC))
+  UNIQUE INDEX DEPARTMENT_IDX (name ASC))
   ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8;
 # 06. Create table event_types;
 CREATE TABLE event_types (
   id BIGINT AUTO_INCREMENT NOT NULL,
   name VARCHAR(45) NOT NULL,
+  salary_coef DECIMAL(7,2) NOT NULL DEFAULT 1,
   PRIMARY KEY (id),
-  UNIQUE INDEX ROLE_IDX (name ASC))
+  UNIQUE INDEX EVENT_IDX (name ASC))
   ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8;
 # 07. Create table status_types;
@@ -27,7 +28,7 @@ CREATE TABLE status_types (
   id BIGINT AUTO_INCREMENT NOT NULL,
   name VARCHAR(45) NOT NULL,
   PRIMARY KEY (id),
-  UNIQUE INDEX ROLE_IDX (name ASC))
+  UNIQUE INDEX STATUS_IDX (name ASC))
   ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8;
 # 08. Table for mapping user and position: user_positions

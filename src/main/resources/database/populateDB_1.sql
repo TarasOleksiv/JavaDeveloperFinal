@@ -9,9 +9,11 @@ INSERT INTO departments (name) VALUES
   ('ACCOUNTING'),
   ('TRANSPORT');
 # 06. Populate event_types;
-INSERT INTO event_types (name) VALUES
-  ('working day'),
-  ('technical study');
+INSERT INTO event_types (name, salary_coef) VALUES
+  ('working day', 1),
+  ('business trip', 1.2),
+  ('vacation', 1),
+  ('sick-leave', 0.8);
 # 07. Populate status_types;
 INSERT INTO status_types (name) VALUES
   ('work'),

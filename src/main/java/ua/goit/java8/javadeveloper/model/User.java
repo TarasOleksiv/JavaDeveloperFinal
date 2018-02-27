@@ -64,6 +64,15 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "position_id"))
     private Position position;
 
+    @JsonIgnore
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "event_users", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id"))
+    private Set<Event> events;
+
+    public User() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -154,4 +163,11 @@ public class User implements Serializable {
         this.position = position;
     }
 
+    public Set<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Set<Event> events) {
+        this.events = events;
+    }
 }
