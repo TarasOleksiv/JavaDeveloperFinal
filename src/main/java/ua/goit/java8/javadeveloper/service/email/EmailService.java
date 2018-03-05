@@ -1,4 +1,4 @@
-package ua.goit.java8.javadeveloper.service;
+package ua.goit.java8.javadeveloper.service.email;
 
 /**
  * Created by t.oleksiv on 04/03/2018.

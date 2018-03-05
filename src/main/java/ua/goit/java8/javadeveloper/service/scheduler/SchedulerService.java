@@ -1,10 +1,14 @@
-package ua.goit.java8.javadeveloper.service;
+package ua.goit.java8.javadeveloper.service.scheduler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ua.goit.java8.javadeveloper.model.User;
 import ua.goit.java8.javadeveloper.report.entity.UserMonthlySalaryAggregation;
+import ua.goit.java8.javadeveloper.service.MonthlySalaryService;
+import ua.goit.java8.javadeveloper.service.UserSalaryService;
+import ua.goit.java8.javadeveloper.service.UserService;
+import ua.goit.java8.javadeveloper.service.email.EmailService;
 import ua.goit.java8.javadeveloper.validator.SalaryValidator;
 
 import java.math.BigDecimal;

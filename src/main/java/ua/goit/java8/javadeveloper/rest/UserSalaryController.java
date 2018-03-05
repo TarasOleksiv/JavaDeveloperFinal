@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ua.goit.java8.javadeveloper.report.entity.UserMonthlySalaryAggregation;
-import ua.goit.java8.javadeveloper.service.EmailService;
+import ua.goit.java8.javadeveloper.service.email.EmailService;
 import ua.goit.java8.javadeveloper.service.MonthlySalaryService;
 import ua.goit.java8.javadeveloper.report.entity.UserSalaryAggregation;
 import ua.goit.java8.javadeveloper.service.UserSalaryService;

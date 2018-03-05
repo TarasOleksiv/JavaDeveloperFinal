@@ -1,4 +1,4 @@
-package ua.goit.java8.javadeveloper.utils;
+package ua.goit.java8.javadeveloper.validator;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
