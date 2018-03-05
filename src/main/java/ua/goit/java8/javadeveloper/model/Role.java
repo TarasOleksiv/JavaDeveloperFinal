@@ -1,10 +1,6 @@
 package ua.goit.java8.javadeveloper.model;
 
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
@@ -25,7 +21,6 @@ public class Role implements Serializable {
     @Column(name = "name")
     private String name;
 
-    //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id", scope=Role.class)
     @JsonIgnore
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;

@@ -22,7 +22,7 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping(value = "api/admin/departments")
+@RequestMapping(value = "api/moderator/departments")
 public class DepartmentController {
 
     @Autowired
@@ -81,7 +81,7 @@ public class DepartmentController {
         departmentService.create(department);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("api/admin/departments/{id}").buildAndExpand(department.getId()).toUri());
+        headers.setLocation(ucBuilder.path("api/moderator/departments/{id}").buildAndExpand(department.getId()).toUri());
         return new ResponseEntity<Department>(headers, HttpStatus.CREATED);
     }
 
@@ -121,7 +121,7 @@ public class DepartmentController {
         departmentService.update(currentDepartment);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("api/admin/departments/{id}").buildAndExpand(department.getId()).toUri());
+        headers.setLocation(ucBuilder.path("api/moderator/departments/{id}").buildAndExpand(department.getId()).toUri());
         return new ResponseEntity<>(currentDepartment, headers, HttpStatus.OK);
     }
 
@@ -189,7 +189,7 @@ public class DepartmentController {
         }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("api/admin/departments/{department_id}/users").buildAndExpand(department.getId()).toUri());
+        headers.setLocation(ucBuilder.path("api/moderator/departments/{department_id}/users").buildAndExpand(department.getId()).toUri());
         return new ResponseEntity<Void>(headers, HttpStatus.OK);
     }
 

@@ -1,7 +1,6 @@
 package ua.goit.java8.javadeveloper.service;
 
 import ua.goit.java8.javadeveloper.model.Event;
-import ua.goit.java8.javadeveloper.model.EventType;
 
 import java.util.Date;
 import java.util.List;
@@ -19,10 +18,6 @@ public interface EventService {
 
     List<Event> getAll();
 
-    boolean isEventExist(Event event);
-
-    Event findByDate(Date date);
-
-    Event findByEventType(EventType eventType);
+    Long findByDateAndEventType(Long id, Date date);
 
 }

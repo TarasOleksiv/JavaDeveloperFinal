@@ -22,7 +22,7 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping(value = "api/admin/positions")
+@RequestMapping(value = "api/moderator/positions")
 public class PositionController {
 
     @Autowired

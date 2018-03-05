@@ -1,6 +1,5 @@
 package ua.goit.java8.javadeveloper.service;
 
-import ua.goit.java8.javadeveloper.model.Department;
 import ua.goit.java8.javadeveloper.model.Position;
 
 import java.util.List;

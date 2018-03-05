@@ -3,13 +3,13 @@ package ua.goit.java8.javadeveloper.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ua.goit.java8.javadeveloper.model.Department;
 import ua.goit.java8.javadeveloper.model.Role;
 import ua.goit.java8.javadeveloper.model.User;
 import ua.goit.java8.javadeveloper.repository.DepartmentRepository;
 import ua.goit.java8.javadeveloper.repository.RoleRepository;
 import ua.goit.java8.javadeveloper.repository.UserRepository;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -102,6 +102,11 @@ public class UserServiceImpl implements UserService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Long> findByUserIdAndEventDate(Long id, Date date) {
+        return userRepository.findByUserIdAndEventDate(id,date);
     }
 
 }

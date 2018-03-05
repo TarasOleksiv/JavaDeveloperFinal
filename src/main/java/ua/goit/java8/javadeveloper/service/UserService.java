@@ -3,6 +3,7 @@ package ua.goit.java8.javadeveloper.service;
 import ua.goit.java8.javadeveloper.model.Role;
 import ua.goit.java8.javadeveloper.model.User;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,5 +30,7 @@ public interface UserService {
     boolean addRole(User user, Role role);
 
     boolean removeRole(User user, Role role);
+
+    List<Long> findByUserIdAndEventDate(Long id, Date date);
 
 }

@@ -5,10 +5,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import ua.goit.java8.javadeveloper.model.User;
 import ua.goit.java8.javadeveloper.service.UserService;
+import ua.goit.java8.javadeveloper.validator.RoleUserValidator;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,11 +21,14 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping(value = "api/admin/users")
+@RequestMapping(value = "api/moderator/users")
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RoleUserValidator roleUserValidator;
 
     //-------------------Retrieve All Users--------------------------------------------------------
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -37,22 +42,25 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    /*@GetMapping("api/admin/users")
-    public List<User> listUsers() {
-        return userService.getAll();
-    }*/
+    //-------------------Retrieve Single User (integrated security)--------------------------------------------------------
 
-    //-------------------Retrieve Single User--------------------------------------------------------
+    @RequestMapping(value = {"/{id}", "/{id}/hasuseraccess"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getUser(@PathVariable("id") long id, Authentication authentication) {
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<User> getUser(@PathVariable("id") long id) {
         System.out.println("Fetching User with id " + id);
         User user = userService.getById(id);
         if (user == null) {
             System.out.println("User with id " + id + " not found");
             return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+
+        if (!roleUserValidator.isAllowedToRead(id, authentication)){
+            Map<String, String> messages = new HashMap<String, String>();
+            messages.put("error", "Access Denied");
+            return new ResponseEntity<>(messages, HttpStatus.FORBIDDEN);
+        }
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     //-------------------Create a User--------------------------------------------------------

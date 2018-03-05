@@ -1,7 +1,10 @@
 package ua.goit.java8.javadeveloper.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.Proxy;
+import ua.goit.java8.javadeveloper.json.CustomEventDeserializer;
+import ua.goit.java8.javadeveloper.json.CustomEventSerializer;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,6 +15,8 @@ import java.util.Set;
  * Created by t.oleksiv on 27/02/2018.
  */
 
+@JsonSerialize(using = CustomEventSerializer.class)
+@JsonDeserialize(using = CustomEventDeserializer.class)
 @Entity
 @Table(name = "events")
 @Proxy(lazy = false)
@@ -32,8 +37,9 @@ public class Event implements Serializable {
     @JoinColumn(name = "event_type", referencedColumnName = "id")
     private EventType eventType;
 
-    //@JsonIgnore
-    @ManyToMany(mappedBy = "events")
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "event_users", joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users;
 
     public Event() {

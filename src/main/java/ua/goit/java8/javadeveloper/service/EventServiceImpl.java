@@ -3,7 +3,6 @@ package ua.goit.java8.javadeveloper.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.goit.java8.javadeveloper.model.Event;
-import ua.goit.java8.javadeveloper.model.EventType;
 import ua.goit.java8.javadeveloper.repository.EventRepository;
 
 import java.util.Date;
@@ -40,17 +39,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public boolean isEventExist(Event event) {
-        return ((findByDate(event.getDate())!=null) && (findByEventType(event.getEventType())!=null));
+    public Long findByDateAndEventType(Long id, Date date) {
+        return eventRepository.findByDateAndEventType(id, date);
     }
 
-    @Override
-    public Event findByDate(Date date) {
-        return eventRepository.findByDate(date);
-    }
 
-    @Override
-    public Event findByEventType(EventType eventType) {
-        return eventRepository.findByEventType(eventType);
-    }
 }
