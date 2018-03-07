@@ -157,11 +157,19 @@ public class UserController {
         String username = user.getUsername();
         if (username == null || username.trim().isEmpty()){
             messages.put("username","null or empty");
+        } else {
+            if (username.length() < 4 || username.length() > 20){
+                messages.put("username","username's length should be greater than 3 and less than 21");
+            }
         }
 
         String password = user.getPassword();
         if (password == null || password.trim().isEmpty()){
             messages.put("password","null or empty");
+        } else {
+            if (password.length() < 8 || password.length() > 32){
+                messages.put("password","password's length should be greater than 7 and less than 33");
+            }
         }
 
         //String hourly_rate = user.getHourly_rate().toString();
