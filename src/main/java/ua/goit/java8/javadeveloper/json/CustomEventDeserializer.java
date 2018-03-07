@@ -48,6 +48,7 @@ public class CustomEventDeserializer extends JsonDeserializer<Event> {
                 // move to next, which is "date"'s value
                 jsonParser.nextToken();
                 try {
+                    dateFormatter.setLenient(false);
                     event.setDate(dateFormatter.parse(jsonParser.getText()));
                 } catch (ParseException e) {
                     e.printStackTrace();
